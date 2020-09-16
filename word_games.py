@@ -23,23 +23,6 @@ def words_that_could_be(prefix, all_words):
 			possible_words.add(word)
 	return possible_words
 
-def find_winning_words(letter, all_words):
-	# key:value = second letter:second letter words
-	winning_words = {}
-
-	# for each possible second letter
-	for c in ascii_uppercase:
-		prefix = str(letter+c)
-		print(prefix)
-	
-# builds a "2D" dictionary of all the letters mapped to 
-# all the second letters mapped to the winning words
-def build_word_set(all_words):
-	dictionary = {}
-	for c in ascii_uppercase:
-		dictionary[c] = find_winning_words(c, all_words)
-	return dictionary
-
 '''
 assumes that the word itself is not valid
 '''
@@ -92,7 +75,6 @@ def play_game(all_words):
 
 def initialize_game():
 	all_words = load_words("words.txt")
-	find_winning_words('A', all_words)
 	reply = input("play ghost? y/n\n")
 	if reply == "y":
 		play_game(all_words)
