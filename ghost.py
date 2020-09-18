@@ -14,6 +14,19 @@ for each starting letter, build list of words with odd letters
 
 '''
 
+# preprocesses words so that the new list contains only the shortest words
+def preprocess(all_words):
+	reduced = set()
+	for word in all_words:
+		is_shortest = True
+		for index in range(len(word)):
+			if word[:index] in all_words:
+				is_shortest = False
+				break
+		if is_shortest:
+			reduced.add(word)
+	return reduced
+
 # returns set of all possible words starting with prefix
 def words_that_could_be(prefix, all_words):
 	length = len(prefix)
@@ -23,24 +36,18 @@ def words_that_could_be(prefix, all_words):
 			possible_words.add(word)
 	return possible_words
 
-def find_winning_words(letter, all_words):
-	# key:value = second letter:second letter words
-	winning_words = {}
-
-	# for each possible second letter
-	for c in ascii_uppercase:
-		prefix = str(letter+c)
-		all_possible = words_that_could_be(prefix, all_words)
-		
-		#if only one possibility / all odd / 
-	
-# builds a "2D" dictionary of all the letters mapped to 
-# all the second letters mapped to the winning words
-def build_word_set(all_words):
+# builds a dictionary with the starting prefix, and length of all options from there
+def get_possibilities(prefix, all_words):
 	dictionary = {}
 	for c in ascii_uppercase:
-		dictionary[c] = find_winning_words(c, all_words)
+		dictionary[c] = set()
+		for word in all_words:
+			if word.startswith(prefix+c):
+				#print(word)
+				dictionary[c].add(len(word))
 	return dictionary
+
+
 
 '''
 assumes that the word itself is not valid
@@ -60,7 +67,7 @@ def load_words(filename):
 	all_words = set()
 	for line in f:
 		all_words.add(line.rstrip('\n'))
-	return all_words
+	return preprocess(all_words)
 
 # bad bot, does it randomly
 def reply(prefix, all_words):
@@ -72,8 +79,15 @@ def reply(prefix, all_words):
 
 # works with the dumb "bot"
 def play_game(all_words):
-	game_over = False
+	print(len(all_words))
+	for c in ascii_uppercase:
+		print(c + ": ")
+		print(get_possibilities(c, all_words))
+		print("------------------")
+	
+	game_over = True
 	word = ""
+
 	while not game_over:
 		letter = input("enter uppercase letter: \n")
 		while letter.islower():
